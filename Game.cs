@@ -27,7 +27,6 @@ namespace Labb2_ConsolePong
         {
             Console.Clear();
 
-            // Spelarkontroller (fungerar med ditt Input-system)
             if (Input.IsPressed(ConsoleKey.W))
                 leftPaddle.MoveUp();
             if (Input.IsPressed(ConsoleKey.S))
