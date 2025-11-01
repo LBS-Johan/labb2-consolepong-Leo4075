@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Labb2_ConsolePong
 {
@@ -11,43 +6,64 @@ namespace Labb2_ConsolePong
     {
         int width;
         int height;
+        Paddle leftPaddle;
+        Paddle rightPaddle;
+        Ball ball;
+        int leftScore = 0;
+        int rightScore = 0;
 
         public void StartGame()
         {
-            // Setup konsol-fönstret
             width = Console.WindowWidth;
             height = Console.WindowHeight;
             Console.CursorVisible = false;
+
+            leftPaddle = new Paddle(2, height / 2 - 3, 6);
+            rightPaddle = new Paddle(width - 3, height / 2 - 3, 6);
+            ball = new Ball(width / 2, height / 2);
         }
 
         public bool Run()
         {
-            //Töm hela skärmen i början av varje uppdatering.
             Console.Clear();
 
-            if (Input.IsPressed(ConsoleKey.UpArrow))
-            {
-                //Flytta spelare 1 uppåt
-            }
-            if (Input.IsPressed(ConsoleKey.DownArrow))
-            {
-                //Flytta spelare 1 nedåt
-            }
-
+            // Spelarkontroller (fungerar med ditt Input-system)
             if (Input.IsPressed(ConsoleKey.W))
-            {
-                //Flytta spelare 2 uppåt
-            }
+                leftPaddle.MoveUp();
             if (Input.IsPressed(ConsoleKey.S))
+                leftPaddle.MoveDown(height);
+
+            if (Input.IsPressed(ConsoleKey.UpArrow))
+                rightPaddle.MoveUp();
+            if (Input.IsPressed(ConsoleKey.DownArrow))
+                rightPaddle.MoveDown(height);
+
+            // Uppdatera boll
+            ball.Update(leftPaddle, rightPaddle, width, height);
+
+            // Rita paddlar & boll
+            leftPaddle.Draw();
+            rightPaddle.Draw();
+            ball.Draw();
+
+            // Rita poäng
+            Console.SetCursorPosition(width / 2 - 5, 0);
+            Console.Write($"{leftScore}  |  {rightScore}");
+
+            // Poängsystem
+            if (ball.IsOutLeft())
             {
-                //Flytta spelare 2 nedåt
+                rightScore++;
+                ball = new Ball(width / 2, height / 2);
+            }
+            else if (ball.IsOutRight(width))
+            {
+                leftScore++;
+                ball = new Ball(width / 2, height / 2);
             }
 
-
-
-            //Return true om spelet ska fortsätta
+            // Fortsätt spelet
             return true;
-
         }
     }
 }
